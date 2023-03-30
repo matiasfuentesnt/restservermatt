@@ -3,13 +3,19 @@ const { response } = require('express');
 const UserSchema = require('../models/user.model');
 const bcryptjs = require('bcryptjs');
 
-const usersGet = (req,res = response) => {
-    const { q, name = 'No Name', id} = req.query;
+const usersGet = async(req,res = response) => {
+    const { limit = 5, to = 0 } = req.query;
+    const query = {status: true}
+
+    const [ total, users] = await Promise.all([
+        UserSchema.countDocuments(query),
+        UserSchema.find(query)
+            .skip(Number(to))
+            .limit(Number(limit))
+    ])
+
     res.json({
-        msg: "get API - controller",
-        q,
-        name,
-        id
+        total, users
     });
 };
 
@@ -19,7 +25,7 @@ const usersPost = async(req,res = response) => {
 
 
     //Password Crypt
-    const salt = bcryptjs.genSaltSync(15);
+    const salt = bcryptjs.genSaltSync(10);
     user.password = bcryptjs.hashSync(password, salt);
 
     await user.save();
@@ -30,18 +36,17 @@ const usersPost = async(req,res = response) => {
 
 const usersPut = async(req,res = response) => {
     const id = req.params.id;
-    const { password, google, email, ...caracter } = req.body;
+    const { _id, password, google, email, ...caracter } = req.body;
 
     // TODO validar DB
     if ( password ) {
-        const salt = bcryptjs.genSaltSync(15);
+        const salt = bcryptjs.genSaltSync(10);
         caracter.password = bcryptjs.hashSync(password, salt);
     }
 
     const user = await UserSchema.findByIdAndUpdate( id, caracter);
 
     res.json({
-        msg: "Put API - controller",
         user
     });
 };
@@ -53,9 +58,14 @@ const usersPatch = (req,res = response) => {
 };
 
 
-const usersDelete = (req,res = response) => {
+const usersDelete = async(req,res = response) => {
+
+    const { id } = req.params;
+
+    // const user = await UserSchema.findByIdAndDelete(id); <- Lo elimina por completo de la DB
+    const user = await UserSchema.findByIdAndUpdate(id, {status: false});
     res.json({
-        msg: "Delete API - controller"
+        user
     });
 };
 
