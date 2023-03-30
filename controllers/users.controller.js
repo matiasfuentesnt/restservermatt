@@ -16,14 +16,7 @@ const usersGet = (req,res = response) => {
 const usersPost = async(req,res = response) => {
     const { name, password, role, email } = req.body;
     const user = UserSchema({name, password, role, email});
-    
-    //Mail verification
-    const existMail = await UserSchema.findOne({email});
-    if (existMail) {
-        return res.status(400).json({
-            msg: 'El correo está registrado'
-        });
-    }
+
 
     //Password Crypt
     const salt = bcryptjs.genSaltSync(15);
@@ -35,11 +28,21 @@ const usersPost = async(req,res = response) => {
     });
 };
 
-const usersPut = (req,res = response) => {
+const usersPut = async(req,res = response) => {
     const id = req.params.id;
+    const { password, google, email, ...caracter } = req.body;
+
+    // TODO validar DB
+    if ( password ) {
+        const salt = bcryptjs.genSaltSync(15);
+        caracter.password = bcryptjs.hashSync(password, salt);
+    }
+
+    const user = await UserSchema.findByIdAndUpdate( id, caracter);
+
     res.json({
         msg: "Put API - controller",
-        id
+        user
     });
 };
 
