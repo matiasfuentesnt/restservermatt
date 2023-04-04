@@ -1,7 +1,8 @@
 const { response } = require('express')
+const UserSchema = require('../models/user.model');
 const jwt = require('jsonwebtoken')
 
-const validateJWT = (req, res = response, next) => {
+const validateJWT = async(req, res = response, next) => {
 
     const token = req.header('x-token');
     if(!token){
@@ -12,7 +13,8 @@ const validateJWT = (req, res = response, next) => {
 
     try {
         const { uid } = jwt.verify( token, process.env.SECRETORPRIVATEKEY);
-        req.uid = uid;
+        const user = await UserSchema.findById(uid);
+        req.user = user;
         next();
     } catch (error) {
         console.log(error);
@@ -25,4 +27,4 @@ const validateJWT = (req, res = response, next) => {
 
 
 
-module.exports = validateJWT
+module.exports = {validateJWT};
