@@ -62,10 +62,12 @@ const usersDelete = async(req,res = response) => {
 
     const { id } = req.params;
 
+    const uid = req.uid;
     // const user = await UserSchema.findByIdAndDelete(id); <- Lo elimina por completo de la DB
     const user = await UserSchema.findByIdAndUpdate(id, {status: false});
     res.json({
-        user
+        user,
+        uid
     });
 };
 
