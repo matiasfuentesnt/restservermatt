@@ -8,35 +8,37 @@ const { usersGet, usersPost, usersPut, usersPatch, usersDelete } = require('../c
 
 const router = Router();
 
-    router.get('/', usersGet);
-    
-    router.post('/', [
-        check('name', 'El nombre es obligatorio').not().isEmpty(),
-        check('password', 'El password debe de ser mas de 6 letras').isLength({ min: 6}),
-        check('email', 'El correo no es valido').isEmail(),
-        check('email').custom( isEmailValidate ),
-        check('role').custom( isRoleValidate ),
-        validateField  
-    ], usersPost);
+router.get('/', usersGet);
 
-    router.put('/:id',[
-        check('id', 'No es un ID válido').isMongoId(),
-        check('id').custom(isUserIDValidate),
-        check('name', 'El nombre es obligatorio').not().isEmpty(),
-        check('password', 'El password debe de ser mas de 6 letras').isLength({ min: 6}),
-        check('role').custom( isRoleValidate ),
-        validateField
-    ], usersPut);
-    router.patch('/', usersPatch);
+router.post('/', [
+    check('name', 'El nombre es obligatorio').not().isEmpty(),
+    check('password', 'El password debe de ser mas de 6 letras').isLength({ min: 6}),
+    check('email', 'El correo no es valido').isEmail(),
+    check('email').custom( isEmailValidate ),
+    check('role').custom( isRoleValidate ),
+    validateField  
+], usersPost);
 
-    router.delete('/:id',[
-        validateJWT,
-        //isAdminRole,
-        getRole('ADMIN_ROLE'),
-        check('id', 'No es un ID válido').isMongoId(),
-        check('id').custom(isUserIDValidate),
-        validateField
-    ], usersDelete);
+router.put('/:id',[
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(isUserIDValidate),
+    check('name', 'El nombre es obligatorio').not().isEmpty(),
+    check('password', 'El password debe de ser mas de 6 letras').isLength({ min: 6}),
+    check('role').custom( isRoleValidate ),
+    validateField
+], usersPut);
+
+
+router.patch('/', usersPatch);
+
+router.delete('/:id',[
+    validateJWT,
+    //isAdminRole,
+    getRole('ADMIN_ROLE'),
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(isUserIDValidate),
+    validateField
+], usersDelete);
 
 
 

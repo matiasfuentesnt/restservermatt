@@ -3,6 +3,7 @@ const cors = require('cors');
 const authRoutes = require('../routes/auth');
 const userRoutes = require('../routes/user');
 const categoriesRoutes = require('../routes/categories');
+const productsRoutes = require('../routes/products');
 const { } = require('../database/config');
 const dbConnection = require('../database/config');
 
@@ -14,6 +15,7 @@ const dbConnection = require('../database/config');
             this.path = {
                 auth: '/api/auth',
                 user: '/api/user',
+                product: '/api/product',
                 category: '/api/category'
             }
             // DB Conection
@@ -40,6 +42,7 @@ const dbConnection = require('../database/config');
             
             this.app.use(this.path.auth, authRoutes);
             this.app.use(this.path.user, userRoutes);
+            this.app.use(this.path.product, productsRoutes);
             this.app.use(this.path.category, categoriesRoutes);
 
         }
