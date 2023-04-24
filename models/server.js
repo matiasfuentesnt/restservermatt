@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('../routes/auth');
 const userRoutes = require('../routes/user');
+const categoriesRoutes = require('../routes/categories');
 const { } = require('../database/config');
 const dbConnection = require('../database/config');
 
@@ -10,9 +11,11 @@ const dbConnection = require('../database/config');
         constructor() {
             this.app = express();
             this.port = process.env.PORT;
-            this.usersRoutePath = '/api/user';
-            this.authRoutePath = '/api/auth';
-            
+            this.path = {
+                auth: '/api/auth',
+                user: '/api/user',
+                category: '/api/category'
+            }
             // DB Conection
             this.dataBaseConnection();
 
@@ -35,8 +38,9 @@ const dbConnection = require('../database/config');
 
         routes() {
             
-            this.app.use(this.authRoutePath, authRoutes);
-            this.app.use(this.usersRoutePath, userRoutes);
+            this.app.use(this.path.auth, authRoutes);
+            this.app.use(this.path.user, userRoutes);
+            this.app.use(this.path.category, categoriesRoutes);
 
         }
 
