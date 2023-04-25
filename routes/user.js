@@ -20,6 +20,7 @@ router.post('/', [
 ], usersPost);
 
 router.put('/:id',[
+    validateJWT,
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(isUserIDValidate),
     check('name', 'El nombre es obligatorio').not().isEmpty(),
@@ -28,12 +29,8 @@ router.put('/:id',[
     validateField
 ], usersPut);
 
-
-router.patch('/', usersPatch);
-
 router.delete('/:id',[
     validateJWT,
-    //isAdminRole,
     getRole('ADMIN_ROLE'),
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(isUserIDValidate),

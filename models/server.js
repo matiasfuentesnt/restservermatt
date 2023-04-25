@@ -15,7 +15,7 @@ const dbConnection = require('../database/config');
             this.path = {
                 auth: '/api/auth',
                 user: '/api/user',
-                product: '/api/product',
+                product: '/home',
                 category: '/api/category'
             }
             // DB Conection

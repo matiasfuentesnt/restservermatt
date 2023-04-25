@@ -6,7 +6,7 @@ const validateJWT = async(req, res = response, next) => {
     const token = req.header('x-token');
     if(!token){
         return res.status(401).json({
-            msg: 'No hay token en la peticion'
+            msg: 'No hay token en la peticion. Por favor, ingrese el "x-token" en los headers.'
         })
     }
     try {
@@ -17,7 +17,7 @@ const validateJWT = async(req, res = response, next) => {
     } catch (error) {
         console.log(error);
         res.status(401).json({
-            msg: 'Token no válido'
+            msg: 'Token no válido. Por favor, ingrese el "x-token" en los headers.'
         })
     }
 }

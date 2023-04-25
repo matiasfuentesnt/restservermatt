@@ -29,6 +29,9 @@ const ProductSchema = Schema({
     description: {
         type: String
     },
+    codigo: {
+        type: Number,
+    },
     stock: {
         type: Boolean,
         default: true

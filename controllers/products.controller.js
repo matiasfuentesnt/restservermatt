@@ -23,19 +23,22 @@ const getProduct = async(req, res) => { // OBTENER PRODUCTO POR ID
 }
 
 const createProduct = async(req,res = response) => { // CREAR PRODUCTO
+    const body = req.body;
+    let codigo = req.body.codigo;
     const nombre = req.body.nombre;
-    const categoria = req.body.categoria;
     const product = await Product.findOne({nombre});
     if(product) {
         return res.status(400).json({
             msg: `El producto ${product.nombre}, ya existe.`
         });
     }
+    if(!codigo){
+        codigo = Math.floor(Math.random() * 99999)
+    }
     const data = {
         ...body,
-        nombre,
         usuario: req.user._id,
-        categoria,
+        codigo
     }
     const products = new Product(data);
     await products.save();
